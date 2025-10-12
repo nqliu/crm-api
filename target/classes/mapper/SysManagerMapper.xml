@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.SysManagerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crm.entity.SysManager">
+        <id column="id" property="id" />
+        <result column="account" property="account" />
+        <result column="password" property="password" />
+        <result column="nickname" property="nickname" />
+        <result column="status" property="status" />
+        <result column="delete_flag" property="deleteFlag" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <select id="getManagerPage" resultType="com.crm.vo.SysManagerVO">
+        select sm.*,smr.role_id as roleId from sys_manager sm
+        left join sys_manager_role smr on sm.id = smr.manager_id and smr.delete_flag = 0
+        where sm.delete_flag = 0
+        <if test="query.account != null and query.account != ''  ">
+            and sm.account like concat('%',#{query.account},'%')
+        </if>
+        <if test="query.type != null ">
+            and sm.type = #{query.type}
+        </if>
+        order by sm.create_time desc
+    </select>
+
+</mapper>

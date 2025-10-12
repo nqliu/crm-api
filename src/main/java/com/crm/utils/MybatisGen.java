@@ -21,7 +21,7 @@ public class MybatisGen {
 
     public static void main(String[] args) {
         String path = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("main")
-                .concat(File.separator).concat("java").concat(File.separator).concat("com").concat(File.separator).concat("vact").concat(File.separator);
+                .concat(File.separator).concat("java").concat(File.separator).concat("com").concat(File.separator).concat("crm").concat(File.separator);
         String pathXml = System.getProperty("user.dir").concat(File.separator).concat("src").concat(File.separator).concat("main")
                 .concat(File.separator).concat("resources").concat(File.separator).concat("mapper");
 
@@ -32,14 +32,14 @@ public class MybatisGen {
         outputFileStringMap.put(OutputFile.entity,path +  "entity");
         outputFileStringMap.put(OutputFile.mapper,path +  "mapper");
         outputFileStringMap.put(OutputFile.xml, pathXml);
-        FastAutoGenerator.create("jdbc:mysql://47.122.7.142:3306/db_vact", "root", "root")
+        FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/db_crm", "root", "123456")
                 .globalConfig(builder -> {
-                    builder.author("vact").enableSwagger(); // 设置作者// 开启 swagger 模式
+                    builder.author("crm").enableSwagger(); // 设置作者// 开启 swagger 模式
 
                 })
                 .packageConfig(builder -> {
                     builder.parent("com") // 设置父包名
-                            .moduleName("vact") // 设置父包模块名
+                            .moduleName("crm") // 设置父包模块名
                             .pathInfo(outputFileStringMap);
                          // 设置mapperXml生成路径
                 })
