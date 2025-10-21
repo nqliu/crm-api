@@ -1,26 +1,20 @@
 package com.crm.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.*;
+import com.crm.utils.DateUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * <p>
- * 
- * </p>
- *
- * @author crm
- * @since 2025-10-12
- */
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @TableName("t_product")
@@ -33,10 +27,12 @@ public class Product {
 
     @ApiModelProperty("商品名称")
     @TableField("name")
+    @NotBlank(message = "商品名称不能为空")
     private String name;
 
     @ApiModelProperty("价格")
     @TableField("price")
+    @NotNull(message = "价格不能为空")
     private BigDecimal price;
 
     @ApiModelProperty("销量")
@@ -45,11 +41,13 @@ public class Product {
 
     @ApiModelProperty("库存")
     @TableField("stock")
+    @NotNull(message = "库存不能为空")
+    @Min(value = 0, message = "库存不能小于0")
     private Integer stock;
 
     @ApiModelProperty("商品状态 0-初始化，1-上架，2-下架")
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     @ApiModelProperty("封面图")
     @TableField("cover_image")
@@ -62,13 +60,26 @@ public class Product {
     @ApiModelProperty("逻辑删除 0-未删除，1-已删除")
     @TableField(value = "delete_flag", fill = FieldFill.INSERT)
     @TableLogic
-    private Byte deleteFlag;
+    @JsonIgnore
+    private Integer deleteFlag;
 
     @ApiModelProperty("创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
     private LocalDateTime createTime;
 
     @ApiModelProperty("更新时间")
     @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN)
     private LocalDateTime updateTime;
+
+    @ApiModelProperty("上架时间")
+    @TableField(value = "on_shelf_time",updateStrategy = FieldStrategy.IGNORED)
+    @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN,timezone = "Asia/Shanghai")
+    private LocalDateTime onShelfTime;
+
+    @ApiModelProperty("下架时间")
+    @TableField(value = "off_shelf_time",updateStrategy = FieldStrategy.IGNORED)
+    @JsonFormat(pattern = DateUtils.DATE_TIME_PATTERN,timezone = "Asia/Shanghai")
+    private LocalDateTime offShelfTime;
 }

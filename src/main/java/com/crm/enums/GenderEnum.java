@@ -1,0 +1,36 @@
+package com.crm.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.Objects;
+
+@Getter
+@AllArgsConstructor
+public enum GenderEnum {
+
+    MALE(0, "男"),
+    FEMALE(1, "女"),
+    SECRET(2,"保密");
+
+    private final int value;
+    private final String name;
+
+    public static String getNameByValue(int value) {
+        for (GenderEnum s : GenderEnum.values()) {
+            if (s.getValue() == value) {
+                return s.getName();
+            }
+        }
+        return "";
+    }
+
+    public static Integer getValueByName(String name) {
+        for (GenderEnum s : GenderEnum.values()) {
+            if (Objects.equals(s.getName(), name)) {
+                return s.getValue();
+            }
+        }
+        return null;
+    }
+}
