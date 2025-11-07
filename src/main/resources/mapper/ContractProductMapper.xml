@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.mapper.ContractProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.crm.entity.ContractProduct">
+        <id column="id" property="id" />
+        <result column="p_id" property="pId" />
+        <result column="c_id" property="cId" />
+        <result column="p_name" property="pName" />
+        <result column="price" property="price" />
+        <result column="count" property="count" />
+        <result column="total_price" property="totalPrice" />
+    </resultMap>
+
+</mapper>
