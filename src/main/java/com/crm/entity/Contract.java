@@ -61,7 +61,7 @@ public class Contract {
 
     @ApiModelProperty("合同状态 0-初始化，1-审核通过，2-审核未通过")
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     @ApiModelProperty("备注")
     @TableField("remark")
@@ -70,7 +70,7 @@ public class Contract {
     @ApiModelProperty("逻辑删除 0-未删除，1-已删除")
     @TableField(value = "delete_flag", fill = FieldFill.INSERT)
     @TableLogic
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     @ApiModelProperty("创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)
