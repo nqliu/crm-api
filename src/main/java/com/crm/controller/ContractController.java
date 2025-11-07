@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.rmi.ServerException;
+
 /**
  * <p>
  *  前端控制器
@@ -28,14 +30,16 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ContractController {
     private final ContractService contractService;
+
     @PostMapping("page")
     @Operation(summary = "合同列表-分页")
     public Result<PageResult<ContractVO>> getPage(@RequestBody @Validated ContractQuery contractQuery){
         return Result.ok(contractService.getPage(contractQuery));
     }
+
     @PostMapping("saveOrUpdate")
     @Operation(summary = "新增/修改合同信息")
-    public Result saveOrUpdate(@RequestBody @Validated ContractVO customerVO) {
+    public Result saveOrUpdate(@RequestBody @Validated ContractVO customerVO) throws ServerException {
         contractService.saveOrUpdate(customerVO);
         return Result.ok();
     }

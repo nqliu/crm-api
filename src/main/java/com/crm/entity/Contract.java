@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +16,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author crm
@@ -49,7 +50,7 @@ public class Contract {
 
     @ApiModelProperty("签约时间")
     @TableField("sign_time")
-    private LocalDateTime signTime;
+    private LocalDate signTime;
 
     @ApiModelProperty("客户id")
     @TableField("customer_id")
@@ -90,9 +91,9 @@ public class Contract {
 
     @ApiModelProperty("合同开始时间")
     @TableField("start_time")
-    private LocalDateTime startTime;
+    private LocalDate startTime;
 
     @ApiModelProperty("合同结束时间")
     @TableField("end_time")
-    private LocalDateTime endTime;
+    private LocalDate endTime;
 }

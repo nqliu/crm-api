@@ -4,6 +4,9 @@ import com.crm.common.model.Query;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * @author HUAWEI
+ */
 @Data
 public class ContractQuery extends Query {
     @Schema(description = "合同名称")
