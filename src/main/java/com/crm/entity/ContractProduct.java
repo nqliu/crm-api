@@ -12,7 +12,11 @@ import lombok.Setter;
 
 /**
  * <p>
+<<<<<<< HEAD
  *
+=======
+ * 
+>>>>>>> 03e7321785eda405d8e5dc1425bc1f002957872b
  * </p>
  *
  * @author crm
