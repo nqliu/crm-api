@@ -1,12 +1,13 @@
 package com.crm.convert;
 
 import com.crm.entity.Customer;
+import com.crm.entity.Lead;
 import com.crm.vo.CustomerVO;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-11-02T11:38:03+0800",
+    date = "2025-11-08T09:31:36+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 24.0.1 (Oracle Corporation)"
 )
 public class CustomerConvertImpl implements CustomerConvert {
@@ -36,6 +37,32 @@ public class CustomerConvertImpl implements CustomerConvert {
         customer.setGender( customerVO.getGender() );
         customer.setDealCount( customerVO.getDealCount() );
         customer.setCreateTime( customerVO.getCreateTime() );
+
+        return customer;
+    }
+
+    @Override
+    public Customer leadConvert(Lead lead) {
+        if ( lead == null ) {
+            return null;
+        }
+
+        Customer customer = new Customer();
+
+        customer.setId( lead.getId() );
+        customer.setName( lead.getName() );
+        customer.setPhone( lead.getPhone() );
+        customer.setEmail( lead.getEmail() );
+        customer.setLevel( lead.getLevel() );
+        customer.setSource( lead.getSource() );
+        customer.setAddress( lead.getAddress() );
+        customer.setFollowStatus( lead.getFollowStatus() );
+        customer.setNextFollowStatus( lead.getNextFollowStatus() );
+        customer.setRemark( lead.getRemark() );
+        customer.setOwnerId( lead.getOwnerId() );
+        customer.setDeleteFlag( lead.getDeleteFlag() );
+        customer.setCreateTime( lead.getCreateTime() );
+        customer.setUpdateTime( lead.getUpdateTime() );
 
         return customer;
     }
