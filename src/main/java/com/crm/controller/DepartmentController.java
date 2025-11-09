@@ -1,8 +1,10 @@
 package com.crm.controller;
 
+import com.crm.common.aop.Log;
 import com.crm.common.result.PageResult;
 import com.crm.common.result.Result;
 import com.crm.entity.Department;
+import com.crm.enums.BusinessType;
 import com.crm.query.DepartmentQuery;
 import com.crm.query.IdQuery;
 import com.crm.service.DepartmentService;
@@ -34,6 +36,7 @@ public class DepartmentController {
 
     @PostMapping("/page")
     @Operation(summary = "部门分页列表")
+    @Log(title="部门列表-分页", businessType = BusinessType.SELECT)
     public Result<PageResult<Department>> getPage(@RequestBody @Validated DepartmentQuery query){
         return Result.ok(departmentService.getPage(query));
     }
