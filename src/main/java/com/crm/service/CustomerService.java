@@ -5,6 +5,7 @@ import com.crm.entity.Customer;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.crm.entity.Department;
 import com.crm.query.CustomerQuery;
+import com.crm.query.CustomerTrendQuery;
 import com.crm.query.IdQuery;
 import com.crm.vo.CustomerVO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -29,5 +31,5 @@ public interface CustomerService extends IService<Customer> {
     void removeCustomer(List<Integer> ids);
     void customerToPublicPool(IdQuery idQuery);
     void publicPoolToPrivate(IdQuery idQuery);
-
+Map<String,List> getCustomerTrend(CustomerTrendQuery query);
 }
