@@ -5,6 +5,7 @@ import com.crm.common.result.Result;
 import com.crm.entity.Customer;
 import com.crm.enums.BusinessType;
 import com.crm.query.CustomerQuery;
+import com.crm.query.CustomerTrendQuery;
 import com.crm.query.IdQuery;
 import com.crm.service.CustomerService;
 import com.crm.vo.CustomerVO;
@@ -18,6 +19,7 @@ import com.crm.common.exception.ServerException;
 import com.crm.common.aop.Log; // 假设 Log 注解位于该包下
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -67,11 +69,17 @@ public class CustomerController {
         customerService.customerToPublicPool(idQuery);
         return Result.ok();
     }
-    @PostMapping("/toPrivate")
+    @PostMapping("toPrivate")
     @Operation(summary = "领取客户")
     public Result publicPoolToPrivate(@RequestBody @Validated IdQuery idQuery) {
         customerService.publicPoolToPrivate(idQuery);
         return Result.ok();
+    }
+
+    @PostMapping("trendData")
+    @Operation(summary = "客户数量统计")
+    public Result<Map<String, List>> getCustomerTrendData(@RequestBody CustomerTrendQuery query) {
+        return Result.ok(customerService.getCustomerTrendData(query));
     }
 
 }

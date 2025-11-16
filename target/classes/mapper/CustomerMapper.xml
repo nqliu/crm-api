@@ -24,5 +24,51 @@
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
     </resultMap>
+    <select id="getTradeStatistics" resultType="com.crm.vo.CustomerTrendVO">
+        SELECT
+        ANY_VALUE(count(*)) AS tradeCount,
+        ANY_VALUE(DATE_FORMAT(create_time, '%H:%i')) AS tradeTime
+        FROM
+        t_customer
+        WHERE
+        delete_flag = 0
+        <if test="query.timeRange[0] != null and query.timeRange[1] != null ">
+            AND create_time BETWEEN #{query.timeRange[0]} AND #{query.timeRange[1]}
+        </if>
+        GROUP BY
+        tradeTime;
+    </select>
+
+    <select id="getTradeStatisticsByDay" resultType="com.crm.vo.CustomerTrendVO">
+        SELECT
+        ANY_VALUE(count(*)) AS tradeCount,
+        DATE_FORMAT(create_time, #{query.timeFormat}) AS tradeTime
+        FROM
+        t_customer
+        WHERE
+        delete_flag = 0
+        <if test="query.timeRange[0] != null and query.timeRange[1] != null ">
+            AND create_time BETWEEN #{query.timeRange[0]} AND #{query.timeRange[1]}
+        </if>
+        GROUP BY
+        tradeTime;
+    </select>
+
+    <select id="getTradeStatisticsByWeek" resultType="com.crm.vo.CustomerTrendVO">
+        SELECT
+        ANY_VALUE(count(*)) AS tradeCount,
+        FLOOR((DATEDIFF(create_time, DATE_FORMAT(create_time, '%Y-01-01')) +
+        WEEKDAY(DATE_FORMAT(create_time, '%Y-01-01')) + 1) / 7) + 1 AS tradeTime
+        FROM
+        t_customer
+        WHERE
+        delete_flag = 0
+        <if test="query.timeRange[0] != null and query.timeRange[1] != null ">
+            AND create_time BETWEEN #{query.timeRange[0]} AND #{query.timeRange[1]}
+            AND create_time >= #{query.timeRange[0]}
+        </if>
+        GROUP BY
+        tradeTime;
+    </select>
 
 </mapper>

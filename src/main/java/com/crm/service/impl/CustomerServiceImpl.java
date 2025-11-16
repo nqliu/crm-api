@@ -15,6 +15,7 @@ import com.crm.security.user.SecurityUser;
 import com.crm.service.CustomerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.crm.utils.ExcelUtils;
+import com.crm.vo.CustomerTrendVO;
 import com.crm.vo.CustomerVO;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import io.micrometer.common.util.StringUtils;
@@ -22,8 +23,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.crm.utils.DateUtils.*;
 
 /**
  * <p>
@@ -76,58 +84,102 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
         wrapper.orderByDesc(Customer::getCreateTime);
         return wrapper;
     }
+
     @Override
-    public void saveOrUpdate(CustomerVO  customerVO) {
-        LambdaQueryWrapper<Customer> wrapper = new LambdaQueryWrapper<Customer>().eq(Customer::getPhone,customerVO.getPhone());
-        if(customerVO.getId()==null){
+    public void saveOrUpdate(CustomerVO customerVO) throws ServerException {
+        LambdaQueryWrapper<Customer> wrapper = new LambdaQueryWrapper<Customer>().eq(Customer::getName, customerVO.getPhone());
+        if (customerVO.getId() == null){
             Customer customer = baseMapper.selectOne(wrapper);
-            if(customer!=null){
-                throw new ServerException("该手机号已存在，请勿重复添加");
+            if (customer != null){
+                throw new ServerException("该手机号客户已存在，请勿重复添加");
             }
             Customer convert = CustomerConvert.INSTANCE.convert(customerVO);
             Integer managerId = SecurityUser.getManagerId();
-            convert.setCreaterId(managerId);
             convert.setOwnerId(managerId);
+            convert.setCreaterId(managerId);
             baseMapper.insert(convert);
-        }else {
-            wrapper.ne(Customer::getId,customerVO.getId());
-            Customer customer =baseMapper.selectOne(wrapper);
+        }else{
+            wrapper.ne(Customer::getId, customerVO.getId());
+            Customer customer = baseMapper.selectOne(wrapper);
             if(customer!=null){
-                throw new ServerException("该手机号已存在，请勿重复添加");
+                throw new ServerException("该手机号客户已存在，请勿重复添加");
             }
             Customer convert = CustomerConvert.INSTANCE.convert(customerVO);
             baseMapper.updateById(convert);
         }
-
     }
     @Override
-    public void removeCustomer(List<Integer>ids){
+    public void removeCustomer(List<Integer> ids){
         removeByIds(ids);
     }
+
     @Override
-    public void customerToPublicPool(IdQuery idQuery) {
+    public void customerToPublicPool(IdQuery idQuery) throws ServerException {
         Customer customer = baseMapper.selectById(idQuery.getId());
-        if (customer == null) {
-            throw new ServerException("客户不存在，无法转入公海");
+        if(customer == null){
+            throw new ServerException("客户不存在,无法转入公海");
         }
         customer.setIsPublic(1);
         customer.setOwnerId(null);
         baseMapper.updateById(customer);
     }
+
     @Override
-    public void publicPoolToPrivate(IdQuery idQuery) {
+    public void publicPoolToPrivate(IdQuery idQuery) throws ServerException {
         Customer customer = baseMapper.selectById(idQuery.getId());
         if (customer == null) {
-            throw new ServerException("客户不存在，无法转入公海");
+            throw new ServerException("客户不存在,无法转入公海");
         }
         customer.setIsPublic(0);
-        Integer ownerId=SecurityUser.getManagerId();
+        Integer ownerId = SecurityUser.getManagerId();
         customer.setOwnerId(ownerId);
         baseMapper.updateById(customer);
     }
 
     @Override
-    public Map<String, List> getCustomerTrend(CustomerTrendQuery query) {
-        return Map.of();
+    public Map<String, List> getCustomerTrendData(CustomerTrendQuery query) {
+        // 1、X轴展示的时间
+        List<String> timeList = new ArrayList<>();
+        // 2、Y轴展示的数据
+        List<Integer> countList = new ArrayList<>();
+        // 3、Mapper 查询返回的结果
+        List<CustomerTrendVO> result;
+        if ("day".equals(query.getTransactionType())){
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime localDateTime =now.truncatedTo(ChronoUnit.SECONDS);
+            LocalDateTime startTime = now.withHour(0).withMinute(0).withSecond(0).truncatedTo(ChronoUnit.SECONDS);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            List<String> timeRange = new ArrayList<>();
+            timeRange.add(formatter.format(startTime));
+            timeRange.add(formatter.format(localDateTime));
+            timeList = getHourData(timeRange);
+            query.setTimeRange(timeRange);
+            result = baseMapper.getTradeStatistics(query);
+        }else if("monthrange".equals(query.getTransactionType())){
+            query.setTimeFormat("%Y-%m");
+            timeList = getMonthInRange(query.getTimeRange().get(0),query.getTimeRange().get(1));
+            result = baseMapper.getTradeStatisticsByDay(query);
+        }else if("week".equals(query.getTransactionType())){
+            timeList = getWeekInRange(query.getTimeRange().get(0),query.getTimeRange().get(1));
+            result = baseMapper.getTradeStatisticsByWeek(query);
+        }else{
+            query.setTimeFormat("%Y-%m-%d");
+            timeList = getDatesInRange(query.getTimeRange().get(0),query.getTimeRange().get(1));
+            result = baseMapper.getTradeStatisticsByDay(query);
+        }
+        //匹配时间点查询到的数据，没有值默认填充0
+        List<CustomerTrendVO> finalResult = result;
+        timeList.forEach((String time) -> {
+            finalResult.stream().filter((CustomerTrendVO item) -> item.getTradeTime().equals(time)).findFirst().ifPresentOrElse((CustomerTrendVO item) -> {
+                countList.add(item.getTradeCount());
+            }, () -> {
+                countList.add(0);
+            });
+        });
+
+        Map<String, List> resultMap = new HashMap<>();
+        resultMap.put("timeList", timeList);
+        resultMap.put("countList", countList);
+        return resultMap;
     }
 }

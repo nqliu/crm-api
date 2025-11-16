@@ -31,5 +31,5 @@ public interface CustomerService extends IService<Customer> {
     void removeCustomer(List<Integer> ids);
     void customerToPublicPool(IdQuery idQuery);
     void publicPoolToPrivate(IdQuery idQuery);
-Map<String,List> getCustomerTrend(CustomerTrendQuery query);
+Map<String,List>  getCustomerTrendData(CustomerTrendQuery query);
 }
