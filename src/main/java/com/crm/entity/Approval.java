@@ -32,7 +32,7 @@ public class Approval {
 
     @ApiModelProperty("0-合同审核，1-回款审核")
     @TableField("type")
-    private Byte type;
+    private Integer type;
 
     @ApiModelProperty("创建人id")
     @TableField("creater_id")
@@ -57,7 +57,7 @@ public class Approval {
     @ApiModelProperty("逻辑删除 0-未删除，1-已删除")
     @TableField(value = "delete_flag", fill = FieldFill.INSERT)
     @TableLogic
-    private Byte deleteFlag;
+    private Integer deleteFlag;
 
     @ApiModelProperty("创建时间")
     @TableField(value = "create_time", fill = FieldFill.INSERT)

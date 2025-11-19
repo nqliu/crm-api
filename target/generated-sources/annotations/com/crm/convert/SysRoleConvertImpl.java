@@ -8,7 +8,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-11-08T09:02:00+0800",
+    date = "2025-11-19T16:23:19+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 24.0.1 (Oracle Corporation)"
 )
 public class SysRoleConvertImpl implements SysRoleConvert {

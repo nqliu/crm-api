@@ -1,5 +1,6 @@
 package com.crm.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.List;
 
@@ -16,4 +17,9 @@ public class TrendData {
     private List<Integer> leadData;
     // 每日合同数据
     private List<Integer> contractData;
+    // 新增：审核趋势字段
+    @ApiModelProperty("近7日审核通过数量趋势")
+    private List<Integer> approvedData;
+    @ApiModelProperty("近7日审核拒绝数量趋势")
+    private List<Integer> rejectedData;
 }

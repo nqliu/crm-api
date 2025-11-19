@@ -42,6 +42,10 @@ public class Manager {
     @TableField("password")
     private String password;
 
+    @ApiModelProperty("邮箱")
+    @TableField("email")
+    private String email;
+
     @ApiModelProperty("状态  0：停用   1：正常")
     @TableField("status")
     private Byte status;

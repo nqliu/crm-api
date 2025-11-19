@@ -2,6 +2,7 @@ package com.crm.vo;
 
 
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.math.BigDecimal;
 
@@ -27,4 +28,13 @@ public class StatisticsData {
     private BigDecimal contractAmount;
     // 金额变化百分比
     private int amountChange;
+
+    @ApiModelProperty("今日审核通过合同数量")
+    private int todayApprovedContractCount;
+    @ApiModelProperty("审核通过数量变化率(%)")
+    private int approvedContractChange;
+    @ApiModelProperty("今日审核拒绝合同数量")
+    private int todayRejectedContractCount;
+    @ApiModelProperty("审核拒绝数量变化率(%)")
+    private int rejectedContractChange;
 }

@@ -1,7 +1,9 @@
 package com.crm.mapper;
 
 import com.crm.entity.Contract;
+
 import com.crm.vo.ContractTrendPieVO;
+
 import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,6 +25,9 @@ public interface ContractMapper extends MPJBaseMapper<Contract> {
     int countByCreateDate(@Param("date") LocalDate date);
     BigDecimal sumAmountByCreateDate(@Param("date") LocalDate date);
     // 合同趋势
-    int countTodayApprovedContracts(@Param("managerId") Integer managerId);
-    int countTodayRejectedContracts(@Param("managerId") Integer managerId);
+    int countByStatusAndDate(
+            @Param("managerId") Integer managerId,
+            @Param("date") String date,
+            @Param("status") Integer status
+    );
 }

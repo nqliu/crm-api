@@ -14,5 +14,7 @@
         <result column="update_time" property="updateTime" />
         <result column="depart_id" property="departId" />
     </resultMap>
-
+    <select id="selectByIdWithEmail" resultType="com.crm.entity.Manager">
+        SELECT * FROM manager WHERE id = #{id}
+    </select>
 </mapper>

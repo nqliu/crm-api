@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class ProductVO {
     @JsonProperty("pId")
-    private Integer id;
+    private Integer pId;
     @JsonProperty("pName")
     private String pName;
     @JsonProperty("totalPrice")

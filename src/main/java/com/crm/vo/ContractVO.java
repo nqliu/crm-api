@@ -79,4 +79,12 @@ public class ContractVO {
     private LocalDate endTime;
 
     List<ProductVO> products;
+    @ApiModelProperty("审核状态")
+    private Integer approvalStatus;
+    @ApiModelProperty("审核意见")
+    private String approvalComment;
+    @ApiModelProperty("审核时间")
+    private LocalDateTime approvalTime;
 }
+
+
