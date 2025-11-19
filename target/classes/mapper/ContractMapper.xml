@@ -2,25 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.crm.mapper.ContractMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.crm.entity.Contract">
-        <id column="id" property="id" />
-        <result column="number" property="number" />
-        <result column="name" property="name" />
-        <result column="amount" property="amount" />
-        <result column="received_amount" property="receivedAmount" />
-        <result column="sign_time" property="signTime" />
-        <result column="customer_id" property="customerId" />
-        <result column="opportunity_id" property="opportunityId" />
-        <result column="status" property="status" />
-        <result column="remark" property="remark" />
-        <result column="delete_flag" property="deleteFlag" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="creater_id" property="createrId" />
-        <result column="owner_id" property="ownerId" />
-        <result column="start_time" property="startTime" />
-        <result column="end_time" property="endTime" />
-    </resultMap>
+    <select id="countByStatus" resultType="com.crm.vo.ContractTrendPieVO">
+        SELECT
+            status,
+            COUNT(*) AS count,
+            -- 状态名称映射（根据实际业务状态值调整）
+            CASE
+                WHEN status = 0 THEN '待审核'
+                WHEN status = 1 THEN '审核中'
+                WHEN status = 2 THEN '已通过'
+                ELSE '其他状态'
+        END AS statusName
+        FROM t_contract
+        WHERE owner_id = #{managerId} -- 关联当前登录用户
+        GROUP BY status
+    </select>
 
+    <select id="countByCreateDate" resultType="int">
+        SELECT COUNT(*) FROM t_contract
+        WHERE DATE(create_time) = #{date}
+    </select>
+
+    <select id="sumAmountByCreateDate" resultType="java.math.BigDecimal">
+        SELECT SUM(amount) FROM t_contract
+        WHERE DATE(create_time) = #{date}
+    </select>
+
+    <select id="countTodayApprovedContracts" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_contract
+        WHERE DATE(create_time) = CURDATE()
+          AND status = 2
+          AND owner_id = #{managerId}
+          AND delete_flag = 0
+    </select>
+
+    <select id="countTodayRejectedContracts" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_contract
+        WHERE DATE(create_time) = CURDATE()
+          AND status = 3
+          AND owner_id = #{managerId}
+          AND delete_flag = 0
+    </select>
 </mapper>
