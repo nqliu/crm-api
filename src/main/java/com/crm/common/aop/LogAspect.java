@@ -47,7 +47,7 @@ public class LogAspect {
     private final OperLogService operLogService;
     @Before(value = "@annotation(controllerLog)")
     public void doBefore(JoinPoint joinPoint, Log controllerLog) {
-        TIME_THREADLOCAL.set(System.currentTimeMillis());
+        TIME_THREADLOCAL.set(Long.valueOf(System.currentTimeMillis()));
     }
 
     @AfterReturning(pointcut = "@annotation(controllerLog)",returning = "jsonResult")
@@ -67,7 +67,8 @@ public class LogAspect {
 
             // ******=====数据库日志=====****
             OperLog operLog = new OperLog();
-            operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
+            Integer businessType = (Integer) 0;
+            operLog.setStatus(businessType);
             // 请求的地址
             String ip = IpUtils.getIpAddr();
             operLog.setOperIp(ip);

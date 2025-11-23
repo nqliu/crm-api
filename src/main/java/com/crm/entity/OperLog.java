@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,10 +19,9 @@ import lombok.Setter;
  * @author crm
  * @since 2025-10-12
  */
-@Getter
-@Setter
 @TableName("sys_oper_log")
 @ApiModel(value = "OperLog对象", description = "操作日志记录")
+@Data
 public class OperLog {
 
     @ApiModelProperty("日志主键")
